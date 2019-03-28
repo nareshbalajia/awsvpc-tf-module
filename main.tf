@@ -9,7 +9,7 @@ resource "aws_vpc" "primary_vpc" {
 # VPC Public subnets
 resource "aws_subnet" "public_subnets" {
   count                   = "${length(var.public_subnets)}"
-  vpc_id                  = "${aws_vpc.main.id}"
+  vpc_id                  = "${aws_vpc.primary_vpc.id}"
   cidr_block              = "${var.public_subnets[count.index]}"
   availability_zone       = "${data.aws_availability_zones.available.names[count.index]}"
   tags                    = "${merge(var.tags, map("Name", format("%s-public-subnet-%s", var.name, element(data.aws_availability_zones.available.names, count.index))))}"
@@ -18,7 +18,7 @@ resource "aws_subnet" "public_subnets" {
 
 resource "aws_subnet" "private_subnets" {
   count             = "${length(var.private_subnets)}"
-  vpc_id            = "${aws_vpc.main.id}"
+  vpc_id            = "${aws_vpc.primary_vpc.id}"
   cidr_block        = "${var.private_subnets[count.index]}"
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
   tags              = "${merge(var.tags, map("Name", format("%s-private-subnet-%s", var.name, element(data.aws_availability_zones.available.names, count.index))))}"
@@ -26,25 +26,25 @@ resource "aws_subnet" "private_subnets" {
 
 # Route tables
 resource "aws_route_table" "public_rt" {
-  vpc_id           = "${aws_vpc.main.id}"
+  vpc_id           = "${aws_vpc.primary_vpc.id}"
   tags             = "${merge(var.tags, map("Name", format("%s-route-table-public", var.name)))}"
 }
 
 resource "aws_route_table" "private_rt" {
-  vpc_id           = "${aws_vpc.main.id}"
+  vpc_id           = "${aws_vpc.primary_vpc.id}"
   count            = "${length(var.private_subnets)}"
   tags             = "${merge(var.tags, map("Name", format("%s-route-table-private-%s", var.name, element(data.aws_availability_zones.available.names, count.index))))}"
 }
 
 # Route table entries
 resource "aws_route" "to_public_internet_gateway" {
-  route_table_id         = "${aws_route_table.public.id}"
+  route_table_id         = "${aws_route_table.public_rt.id}"
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = "${aws_internet_gateway.main.id}"
 }
 
 resource "aws_route" "to_private_nat_gateway" {
-  route_table_id         = "${element(aws_route_table.private.*.id, count.index)}"
+  route_table_id         = "${element(aws_route_table.private_rt.*.id, count.index)}"
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = "${aws_nat_gateway.private_nat_gw.id}"
   count                  = "${length(var.private_subnets)}"
@@ -65,7 +65,7 @@ resource "aws_route_table_association" "public_rt_association" {
 
 # Internet Gateway
 resource "aws_internet_gateway" "main" {
-  vpc_id = "${aws_vpc.main.id}"
+  vpc_id = "${aws_vpc.primary_vpc.id}"
   tags   = "${merge(var.tags, map("Name", format("%s-igw", var.name)))}"
 }
 
@@ -77,6 +77,6 @@ resource "aws_eip" "private_nat_eip" {
 # NAT Gateway
 resource "aws_nat_gateway" "private_nat_gw" {
   allocation_id = "${aws_eip.private_nat_eip.id}"
-  subnet_id     = "${aws_subnet.public.0.id}"
+  subnet_id     = "${aws_subnet.public_subnets.0.id}"
   depends_on    = ["aws_internet_gateway.main"]
 }

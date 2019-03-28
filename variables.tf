@@ -3,13 +3,17 @@ variable "name" {
   description = "Name tag"
 }
 
+variable "region" {
+  description = "AWS Region"
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = "map"
 }
 
 # VPC
-variable "vpc_cidr" {
+variable "cidr_range" {
   description = "(Required) The CIDR block for the VPC"
 }
 
