@@ -11,7 +11,7 @@ tags {
 }
 
 region = "us-east-1"
-vpc_cidr = "10.101.0.0/16"
+cidr_range = "10.101.0.0/16"
 private_subnets = ["10.101.4.0/24", "10.101.5.0/24", "10.101.6.0/24"]
 public_subnets = ["10.101.7.0/24", "10.101.8.0/24", "10.101.9.0/24"]
 enable_dns_hostnames = true
