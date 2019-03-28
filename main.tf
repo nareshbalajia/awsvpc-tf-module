@@ -80,16 +80,3 @@ resource "aws_nat_gateway" "private_nat_gw" {
   subnet_id     = "${aws_subnet.public_subnets.0.id}"
   depends_on    = ["aws_internet_gateway.main"]
 }
-
-# Cloudwatch log group
-resource "aws_cloudwatch_log_group" "flow_log_group" {
-  name = "/aws/flowlog/${var.name}-flow-log-group"
-}
-
-# VPC Flow log
-resource "aws_flow_log" "vpc_flow_log" {
-  log_group_name = "${aws_cloudwatch_log_group.flow_log_group.name}"
-  iam_role_arn   = "${aws_iam_role.vpc_flow_log_role.arn}"
-  vpc_id         = "${aws_vpc.primary_vpc.id}"
-  traffic_type   = "ALL"
-}
