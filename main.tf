@@ -60,7 +60,7 @@ resource "aws_route_table_association" "private_rt_association" {
 resource "aws_route_table_association" "public_rt_association" {
   count             = "${length(var.public_subnets)}"
   subnet_id         = "${element(aws_subnet.public_subnets.*.id, count.index)}"
-  route_table_id    = "${aws_route.to_public_internet_gateway.id}"
+  route_table_id    = "${aws_route.public_rt.id}"
 }
 
 # Internet Gateway
