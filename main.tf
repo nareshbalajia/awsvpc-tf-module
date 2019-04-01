@@ -90,6 +90,7 @@ resource "aws_cloudwatch_log_group" "flow_log_group" {
 
 resource "aws_flow_log" "vpc_flow_log" {
   log_group_name = "${aws_cloudwatch_log_group.flow_log_group.name}"
+  iam_role_arn   = "${aws_iam_role.vpc_flow_log_role.arn}"
   vpc_id         = "${aws_vpc.primary_vpc.id}"
   traffic_type   = "ALL"
 }
