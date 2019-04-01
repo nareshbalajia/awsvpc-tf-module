@@ -1,3 +1,5 @@
+/*
+
 resource "aws_iam_role" "vpc_flow_log_role" {
   name = "${var.name}_vpc_flow_log_role"
 
@@ -41,3 +43,4 @@ resource "aws_iam_role_policy" "vpc_flow_log_policy" {
 }
 EOF
 }
+*/
