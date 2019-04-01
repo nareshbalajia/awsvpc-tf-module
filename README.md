@@ -1,4 +1,4 @@
-Terraform module for Basic VPC setup on AWS
+Terraform module for Basic VPC setup on AWS infrastructure
 
 ## Inputs
 
