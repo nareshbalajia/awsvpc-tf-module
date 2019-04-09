@@ -33,7 +33,7 @@ resource "aws_route_table" "public_rt" {
 resource "aws_route_table" "private_rt" {
   vpc_id           = "${aws_vpc.primary_vpc.id}"
   count            = "${length(var.private_subnets)}"
-  tags             = "${merge(var.tags, map("Name", format("%s-route-table-private-%s", var.name, element(data.aws_availability_zones.available.names, count.index))))}"
+  tags             = "${merge(var.tags, map("Name-RT", format("%s-route-table-private-%s", var.name, element(data.aws_availability_zones.available.names, count.index))))}"
 }
 
 # Route table entries
