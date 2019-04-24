@@ -4,6 +4,10 @@ resource "aws_vpc" "primary_vpc" {
   cidr_block           = "${var.cidr_range}"
   enable_dns_hostnames = "${var.enable_dns_hostnames}"
   enable_dns_support   = "${var.enable_dns_support}"
+
+  tags = {
+    Name = "demo-naresh-vpc"
+  }
 }
 
 # VPC Public subnets
@@ -12,7 +16,7 @@ resource "aws_subnet" "public_subnets" {
   vpc_id                  = "${aws_vpc.primary_vpc.id}"
   cidr_block              = "${var.public_subnets[count.index]}"
   availability_zone       = "${data.aws_availability_zones.available.names[count.index]}"
-  tags                    = "${merge(var.tags, map("Name", format("%s-public-subnet-%s", var.name, element(data.aws_availability_zones.available.names, count.index))), map("immutable_metadata", format("{\"purpose\":demo-public-subnet-%s-%s", "${count.index}", "}")))}"
+  tags                    = "${merge(var.tags, map("Name", format("%s-public-subnet-%s", var.name, element(data.aws_availability_zones.available.names, count.index))), map("immutable_metadata", format("{\"purpose\":\"demo-public-subnet-%s%s\"", "${count.index}", "}")))}"
   map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
 }
 
@@ -21,7 +25,7 @@ resource "aws_subnet" "private_subnets" {
   vpc_id            = "${aws_vpc.primary_vpc.id}"
   cidr_block        = "${var.private_subnets[count.index]}"
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
-  tags              = "${merge(var.tags, map("Name", format("%s-private-subnet-%s", var.name, element(data.aws_availability_zones.available.names, count.index))), map("immutable_metadata", format("{\"purpose\":demo-private-subnet-%s-%s", "${count.index}", "}")))}"
+  tags              = "${merge(var.tags, map("Name", format("%s-private-subnet-%s", var.name, element(data.aws_availability_zones.available.names, count.index))), map("immutable_metadata", format("{\"purpose\":\"demo-private-subnet-%s%s\"", "${count.index}", "}")))}"
 }
 
 # Route tables
