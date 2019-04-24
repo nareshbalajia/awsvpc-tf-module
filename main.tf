@@ -12,7 +12,7 @@ resource "aws_subnet" "public_subnets" {
   vpc_id                  = "${aws_vpc.primary_vpc.id}"
   cidr_block              = "${var.public_subnets[count.index]}"
   availability_zone       = "${data.aws_availability_zones.available.names[count.index]}"
-  tags                    = "${merge(var.tags, map("Name", format("%s-public-subnet-%s", var.name, element(data.aws_availability_zones.available.names, count.index))))}"
+  tags                    = "${merge(var.tags, map("Name", format("%s-public-subnet-%s", var.name, element(data.aws_availability_zones.available.names, count.index))), map("immutable_metadata", format("{\"purpose\":","demo-public-subnet",count.index,"}")))}"
   map_public_ip_on_launch = "${var.map_public_ip_on_launch}"
 }
 
