@@ -7,7 +7,7 @@ tags {
   Environment  = "test"
   BusinessUnit = "Infra"
   CreatedBy    = "terraform-jenkins"
-  Region       = "ap-southeast-1"
+  Region       = "us-west-2"
 }
 
 region = "ap-southeast-1"
