@@ -6,20 +6,20 @@ resource "aws_security_group" "app_db" {
 
   vpc_id = "${aws_vpc.primary_vpc.id}"
 
+
   ingress {
-    ingress {
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
+  from_port       = 443
+  to_port         = 443
+  protocol        = "tcp"
+  cidr_blocks     = ["0.0.0.0/0"]
   }
 
   ingress {
-  from_port       = 80
-  to_port         = 80
-  protocol        = "tcp"
-  cidr_blocks     = ["0.0.0.0/0"]
-}
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
 
   egress {
     from_port   = 0
@@ -27,5 +27,5 @@ resource "aws_security_group" "app_db" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  }
+
 }
